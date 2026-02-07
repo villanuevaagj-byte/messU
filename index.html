@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Message for Kean</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Share+Tech+Mono&display=swap");
+
+      :root {
+        --black: #0a0a0a;
+        --off-black: #121212;
+        --white: #f6f6f6;
+        --muted: rgba(246, 246, 246, 0.65);
+        --line: rgba(246, 246, 246, 0.18);
+        --shadow: rgba(0, 0, 0, 0.55);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", sans-serif;
+        color: var(--white);
+        background: linear-gradient(180deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 45%),
+          radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.04), transparent 45%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .bg-noise {
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+        mix-blend-mode: soft-light;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .splash {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%);
+        display: grid;
+        place-items: center;
+        z-index: 10;
+        transition: opacity 0.9s ease, visibility 0.9s ease;
+      }
+
+      .splash-inner {
+        text-align: center;
+        display: grid;
+        gap: 14px;
+      }
+
+      .splash-title {
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        font-size: clamp(22px, 6vw, 34px);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--white);
+      }
+
+      .splash-sub {
+        font-size: 12px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .splash.hide {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .topbar {
+        display: none;
+      }
+
+      .brand {
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        letter-spacing: 0.2em;
+        font-size: 14px;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .status::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--white);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+      }
+
+      main {
+        position: relative;
+        z-index: 1;
+        padding-top: 90px;
+        scroll-behavior: smooth;
+      }
+
+      .slide {
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 110px 20px 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .frame {
+        width: min(380px, 92vw);
+        background: var(--off-black);
+        border-radius: 36px;
+        padding: 0;
+        border: 2px solid rgba(255, 255, 255, 0.18);
+        box-shadow:
+          0 30px 70px var(--shadow),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+        transform: translateY(24px);
+        opacity: 0;
+        transition: transform 0.8s ease, opacity 0.8s ease;
+      }
+
+      .frame::after {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 22px;
+        border-radius: 0 0 14px 14px;
+        background: #0a0a0a;
+        border: 1px solid var(--line);
+        border-top: none;
+        z-index: 3;
+      }
+
+      .slide.is-visible .frame {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 44px 18px 16px;
+        background: #0b0b0b;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .statusbar {
+        position: absolute;
+        top: 12px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--muted);
+        z-index: 4;
+        text-transform: uppercase;
+      }
+
+      .status-icons {
+        display: inline-flex;
+        gap: 8px;
+      }
+
+      .pill {
+        width: 18px;
+        height: 8px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+      }
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        background: #0a0a0a;
+        border: 1px solid var(--line);
+        display: grid;
+        place-items: center;
+        color: var(--white);
+        font-weight: 600;
+      }
+
+      .chat-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .chat-title strong {
+        font-size: 16px;
+        letter-spacing: 0.06em;
+      }
+
+      .chat-title span {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .chat-body {
+        padding: 24px 20px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .bubble {
+        max-width: 85%;
+        padding: 14px 16px;
+        border-radius: 16px;
+        font-size: 16px;
+        line-height: 1.6;
+        position: relative;
+      }
+
+      .bubble.me {
+        align-self: flex-end;
+        background: #f2f2f2;
+        color: #111;
+        border-bottom-right-radius: 6px;
+      }
+
+      .bubble.them {
+        align-self: flex-start;
+        background: #151515;
+        color: var(--white);
+        border: 1px solid var(--line);
+        border-bottom-left-radius: 6px;
+      }
+
+      .bubble .accent {
+        color: inherit;
+        font-weight: 700;
+      }
+
+      .timestamp {
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .nav {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        display: inline-flex;
+        gap: 10px;
+        z-index: 5;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 12px;
+        backdrop-filter: blur(8px);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        border: none;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+      }
+
+      .dot.active {
+        background: #fff;
+        transform: scale(1.2);
+      }
+
+      .footer {
+        margin-top: 10px;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .audio-bar {
+        position: fixed;
+        right: 18px;
+        top: 74px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        z-index: 5;
+        backdrop-filter: blur(8px);
+      }
+
+      .audio-btn {
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        background: #f2f2f2;
+        color: #111;
+        cursor: pointer;
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .audio-btn.is-playing {
+        background: #111;
+        color: #fff;
+        border-color: #fff;
+      }
+
+      .audio-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+      }
+
+      .audio-note {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .envelope-wrap {
+        margin-top: 18px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .envelope-btn {
+        border: 1px solid var(--line);
+        background: #0b0b0b;
+        color: var(--white);
+        border-radius: 14px;
+        padding: 10px 14px;
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 11px;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .envelope-btn::before {
+        content: "✉";
+        font-size: 14px;
+      }
+
+      .envelope-btn:hover {
+        transform: translateY(-1px);
+        background: #141414;
+      }
+
+      .envelope-hint {
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .envelope-pulse {
+        position: relative;
+      }
+
+      .envelope-pulse::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        opacity: 0;
+        animation: pulse 2.2s ease-out infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.96);
+          opacity: 0.6;
+        }
+        70% {
+          transform: scale(1.08);
+          opacity: 0;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .letter-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: grid;
+        place-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
+        z-index: 20;
+      }
+
+      .letter-overlay.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .letter {
+        width: min(520px, 90vw);
+        background: #111;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 26px 24px;
+        box-shadow: 0 30px 70px var(--shadow);
+        transform: translateY(18px) scale(0.98);
+        opacity: 0;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+      }
+
+      .letter-overlay.is-open .letter {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      .letter h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+      }
+
+      .letter p {
+        margin: 0;
+        line-height: 1.7;
+        font-size: 15px;
+        color: var(--muted);
+      }
+
+      .letter-actions {
+        margin-top: 18px;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .letter-close {
+        border: 1px solid var(--line);
+        background: #f2f2f2;
+        color: #111;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-family: "Share Tech Mono", "Segoe UI", monospace;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 11px;
+        cursor: pointer;
+      }
+
+      .slide-content {
+        position: relative;
+        z-index: 2;
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .slide.is-visible .slide-content {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 900px) {
+        .nav {
+          left: 14px;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav {
+          bottom: 10px;
+        }
+
+        main {
+          padding-top: 80px;
+        }
+
+        .audio-note {
+          display: none;
+        }
+
+        .audio-bar {
+          top: auto;
+          bottom: 58px;
+          right: 16px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .slide {
+          padding: 100px 14px 80px;
+        }
+
+        .frame {
+          width: min(360px, 94vw);
+          border-radius: 30px;
+        }
+
+        .chat-header {
+          padding: 40px 14px 14px;
+        }
+
+        .chat-body {
+          padding: 20px 14px 22px;
+        }
+
+        .bubble {
+          font-size: 15px;
+          padding: 12px 14px;
+        }
+
+        .timestamp {
+          font-size: 9px;
+        }
+
+        .envelope-wrap {
+          justify-content: space-between;
+        }
+
+        .audio-bar {
+          bottom: 52px;
+          right: 12px;
+          padding: 8px 12px;
+        }
+
+        .audio-btn {
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .frame {
+          width: 94vw;
+          border-radius: 26px;
+        }
+
+        .bubble {
+          font-size: 14px;
+        }
+
+        .envelope-hint {
+          font-size: 9px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-noise" aria-hidden="true"></div>
+    <div class="splash" id="splash" aria-hidden="true">
+      <div class="splash-inner">
+        <div class="splash-title">Loading</div>
+        <div class="splash-sub">Please Wait</div>
+      </div>
+    </div>
+    <header class="topbar">
+      <div class="brand">Private Message</div>
+      <div class="status">Secure</div>
+    </header>
+    <nav class="nav" aria-hidden="true">
+      <button class="dot active" data-slide="0" aria-label="Slide 1">Intro</button>
+      <button class="dot" data-slide="1" aria-label="Slide 2">Pull</button>
+      <button class="dot" data-slide="2" aria-label="Slide 3">Truth</button>
+      <button class="dot" data-slide="3" aria-label="Slide 4">Hope</button>
+    </nav>
+    <div class="audio-bar" role="group" aria-label="Background music">
+      <button class="audio-btn" id="audio-toggle" type="button">Play</button>
+      <span class="audio-note">Background music</span>
+      <audio id="bg-audio" loop preload="none">
+        <source src="LANY - Good Girls (Official Audio).mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+    <div class="letter-overlay" id="letter-overlay" aria-hidden="true">
+      <div class="letter" role="dialog" aria-modal="true" aria-labelledby="letter-title">
+        <h3 id="letter-title">Words I Wish I Had Told You Sooner</h3>
+        <p>words i wish i had told you sooner</p>
+        <div class="letter-actions">
+          <button class="letter-close" id="letter-close" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+    <main>
+      <section class="slide" id="slide-1">
+        <div class="frame">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="status-icons">
+              <span class="pill"></span>
+              <span class="pill"></span>
+              <span class="pill"></span>
+            </span>
+          </div>
+          <div class="chat-header">
+            <div class="avatar">K</div>
+            <div class="chat-title">
+              <strong>Kean</strong>
+              <span>Private Chat</span>
+            </div>
+          </div>
+          <div class="chat-body slide-content">
+            <div class="timestamp">Slide 1 of 4</div>
+            <div class="bubble me">I have something to say.</div>
+            <div class="bubble them">
+              I made a promise to myself back then that I wouldn&rsquo;t enter a relationship until I graduated.
+              I was so firm about it, so sure I could keep that promise. But somehow, that promise slowly
+              faded the moment you messaged me on IG <span class="accent">BWHAHAHAHA</span>.
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide" id="slide-2">
+        <div class="frame">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="status-icons">
+              <span class="pill"></span>
+              <span class="pill"></span>
+              <span class="pill"></span>
+            </span>
+          </div>
+          <div class="chat-header">
+            <div class="avatar">K</div>
+            <div class="chat-title">
+              <strong>Kean</strong>
+              <span>Private Chat</span>
+            </div>
+          </div>
+          <div class="chat-body slide-content">
+            <div class="timestamp">Slide 2 of 4</div>
+            <div class="bubble me">The truth is...</div>
+            <div class="bubble them">
+              I kept ghosting you at first, pretending I didn&rsquo;t care, pretending I was strong enough to
+              stay away. But eventually, I couldn&rsquo;t hold myself back anymore. I found myself wanting to
+              talk to you, wanting to know you more. It was like something in you kept pulling me in,
+              something I couldn&rsquo;t ignore, something I wanted for the rest of my life.
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide" id="slide-3">
+        <div class="frame">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="status-icons">
+              <span class="pill"></span>
+              <span class="pill"></span>
+              <span class="pill"></span>
+            </span>
+          </div>
+          <div class="chat-header">
+            <div class="avatar">K</div>
+            <div class="chat-title">
+              <strong>Kean</strong>
+              <span>Private Chat</span>
+            </div>
+          </div>
+          <div class="chat-body slide-content">
+            <div class="timestamp">Slide 3 of 4</div>
+            <div class="bubble me">And lab...</div>
+            <div class="bubble them">
+              I really wanted to introduce you to my family. God knows how much I wanted to. I imagined it
+              so many times. But there were things I couldn&rsquo;t control — things that felt heavier than what
+              my heart wanted. I was scared of losing my parents trust again and I know you knew the reason.
+              I didn&rsquo;t want to disappoint them or make them feel like I was choosing recklessly. It wasn&rsquo;t
+              because I was unsure of you — it was because I was torn between love and responsibility.
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="slide" id="slide-4">
+        <div class="frame">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="status-icons">
+              <span class="pill"></span>
+              <span class="pill"></span>
+              <span class="pill"></span>
+            </span>
+          </div>
+          <div class="chat-header">
+            <div class="avatar">K</div>
+            <div class="chat-title">
+              <strong>Kean</strong>
+              <span>Private Chat</span>
+            </div>
+          </div>
+          <div class="chat-body slide-content">
+            <div class="timestamp">Slide 4 of 4</div>
+            <div class="bubble me">Sorry, ga.</div>
+            <div class="bubble them">
+              I&rsquo;m sorry that I failed to see that you were already suffering. I was so focused on my own
+              that I didn&rsquo;t notice how heavy things were for you. I know it wasn&rsquo;t that long, what we had,
+              but for me, it feels like something rare and deeply real. And even now, I still hope someday
+              we find a reason, and the courage, to find our way back to each other.
+            </div>
+            <div class="envelope-wrap">
+              <span class="envelope-hint">Tap to open</span>
+              <button class="envelope-btn envelope-pulse" id="open-letter" type="button">Envelope</button>
+            </div>
+            <div class="footer">Live well</div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const main = document.querySelector("main");
+      const dots = Array.from(document.querySelectorAll(".dot"));
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const audio = document.getElementById("bg-audio");
+      const audioToggle = document.getElementById("audio-toggle");
+      const splash = document.getElementById("splash");
+      const openLetter = document.getElementById("open-letter");
+      const letterOverlay = document.getElementById("letter-overlay");
+      const letterClose = document.getElementById("letter-close");
+
+      const updateDots = () => {
+        const top = main.scrollTop;
+        const height = main.clientHeight;
+        const index = Math.round(top / height);
+        dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      };
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const index = Number(dot.dataset.slide || 0);
+          main.scrollTo({ top: index * main.clientHeight, behavior: "smooth" });
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-visible", entry.isIntersecting);
+          });
+        },
+        { root: main, threshold: 0.35 }
+      );
+
+      slides.forEach((slide) => observer.observe(slide));
+
+      main.addEventListener("scroll", () => {
+        window.requestAnimationFrame(updateDots);
+      });
+
+      updateDots();
+
+      if (splash) {
+        window.setTimeout(() => {
+          splash.classList.add("hide");
+        }, 1100);
+      }
+
+      if (audio && audioToggle) {
+        audioToggle.addEventListener("click", async () => {
+          try {
+            if (audio.paused) {
+              await audio.play();
+              audioToggle.textContent = "Pause";
+              audioToggle.classList.add("is-playing");
+            } else {
+              audio.pause();
+              audioToggle.textContent = "Play";
+              audioToggle.classList.remove("is-playing");
+            }
+          } catch (err) {
+            audioToggle.textContent = "Play";
+          }
+        });
+      }
+
+      if (openLetter && letterOverlay && letterClose) {
+        const closeLetter = () => {
+          letterOverlay.classList.remove("is-open");
+          letterOverlay.setAttribute("aria-hidden", "true");
+        };
+
+        openLetter.addEventListener("click", () => {
+          letterOverlay.classList.add("is-open");
+          letterOverlay.setAttribute("aria-hidden", "false");
+        });
+
+        letterClose.addEventListener("click", closeLetter);
+        letterOverlay.addEventListener("click", (event) => {
+          if (event.target === letterOverlay) closeLetter();
+        });
+      }
+    </script>
+  </body>
+</html>
